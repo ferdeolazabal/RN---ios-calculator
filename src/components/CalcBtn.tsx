@@ -1,29 +1,31 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 type Props = {
     text: string;
     color?: string;
     xtraWith?: boolean;
-    action?: (textNumber: string) => void;
+    action: (textNumber: string) => void;
 };
 
-const CalcBtn = ({text, color = '#2D2D2D', xtraWith = false}: Props) => {
+const CalcBtn = ({text, color = '#2D2D2D', xtraWith = false, action}: Props) => {
     return (
-        <View
-            style={{
-                ...styles.btn,
-                backgroundColor: color,
-                width: xtraWith ? 160 : 70,
-            }}>
-            <Text
+        <TouchableOpacity onPress={() => action(text)}>
+            <View
                 style={{
-                    ...styles.btnText,
-                    color: color === '#9B9B9B' ? 'black' : 'white',
+                    ...styles.btn,
+                    backgroundColor: color,
+                    width: xtraWith ? 160 : 70,
                 }}>
-                {text}
-            </Text>
-        </View>
+                <Text
+                    style={{
+                        ...styles.btnText,
+                        color: color === '#9B9B9B' ? 'black' : 'white',
+                    }}>
+                    {text}
+                </Text>
+            </View>
+        </TouchableOpacity>
     );
 };
 
