@@ -1,55 +1,27 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Text, View} from 'react-native';
 import CalcBtn from '../components/CalcBtn';
+import useCalculator from '../hooks/useCalculator';
 import {styles} from '../theme/AppTheme';
 
 const CalculadoraScreen = () => {
-    const [number, setNumber] = useState('0');
-    const [prevNumber, setPrevNumber] = useState('0');
-
-    const cleanState = () => {
-        setNumber('0');
-    };
-
-    const buildNumber = (textNumber: string) => {
-        // Do not accept double dots
-        if (number.includes('.') && textNumber === '.') return;
-
-        if (number.startsWith('0') || number.startsWith('-0')) {
-            // Decimal point
-            if (textNumber === '.') {
-                setNumber(number + textNumber);
-
-                // Evaluate if it is another zero and there is a point
-            } else if (textNumber === '0' && number.includes('.')) {
-                setNumber(number + textNumber);
-
-                // Evaluate if it is different from zero and there is no point
-            } else if (textNumber !== '0' && !number.includes('.')) {
-                setNumber(textNumber);
-
-                // Avoid 000.0
-            } else if (textNumber === '0' && !number.includes('.')) {
-                setNumber(number);
-            } else {
-                setNumber(number + textNumber);
-            }
-        } else {
-            setNumber(number + textNumber);
-        }
-    };
-
-    const negativeNumber = () => {
-        if (number.includes('-')) {
-            setNumber(number.replace('-', ''));
-        } else {
-            setNumber('-' + number);
-        }
-    };
+    const {
+        number,
+        prevNumber,
+        cleanState,
+        buildNumber,
+        negativeNumber,
+        btnDelete,
+        btnDivision,
+        btnMultiply,
+        btnSubtract,
+        btnAdd,
+        calculate,
+    } = useCalculator();
 
     return (
         <View>
-            <Text style={styles.smResult}>{prevNumber}</Text>
+            {prevNumber !== '0' && <Text style={styles.smResult}>{prevNumber}</Text>}
             <Text style={styles.result} numberOfLines={1} adjustsFontSizeToFit>
                 {number}
             </Text>
@@ -57,35 +29,35 @@ const CalculadoraScreen = () => {
             <View style={styles.row}>
                 <CalcBtn text="C" color="#9B9B9B" action={cleanState} />
                 <CalcBtn text="+/-" color="#9B9B9B" action={negativeNumber} />
-                <CalcBtn text="del" color="#9B9B9B" action={cleanState} />
-                <CalcBtn text="/" color="#FF9427" action={cleanState} />
+                <CalcBtn text="del" color="#9B9B9B" action={btnDelete} />
+                <CalcBtn text="/" color="#FF9427" action={btnDivision} />
             </View>
 
             <View style={styles.row}>
                 <CalcBtn text="7" action={buildNumber} />
                 <CalcBtn text="8" action={buildNumber} />
                 <CalcBtn text="9" action={buildNumber} />
-                <CalcBtn text="X" color="#FF9427" action={cleanState} />
+                <CalcBtn text="X" color="#FF9427" action={btnMultiply} />
             </View>
 
             <View style={styles.row}>
                 <CalcBtn text="4" action={buildNumber} />
                 <CalcBtn text="5" action={buildNumber} />
                 <CalcBtn text="6" action={buildNumber} />
-                <CalcBtn text="-" color="#FF9427" action={cleanState} />
+                <CalcBtn text="-" color="#FF9427" action={btnSubtract} />
             </View>
 
             <View style={styles.row}>
                 <CalcBtn text="1" action={buildNumber} />
                 <CalcBtn text="2" action={buildNumber} />
                 <CalcBtn text="3" action={buildNumber} />
-                <CalcBtn text="+" color="#FF9427" action={cleanState} />
+                <CalcBtn text="+" color="#FF9427" action={btnAdd} />
             </View>
 
             <View style={styles.row}>
                 <CalcBtn text="0" xtraWith action={buildNumber} />
                 <CalcBtn text="." action={buildNumber} />
-                <CalcBtn text="=" color="#FF9427" action={cleanState} />
+                <CalcBtn text="=" color="#FF9427" action={calculate} />
             </View>
         </View>
     );
